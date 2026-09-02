@@ -9,6 +9,7 @@ GPU="${3:-0}"
 
 export MUJOCO_GL="${MUJOCO_GL:-egl}"
 export CUDA_VISIBLE_DEVICES="${GPU}"
+export MUJOCO_EGL_DEVICE_ID=0
 
 OUT="${OUT:-hackathon_output}"
 EVAL_DIR="${OUT}/eval/timed/${TASK}"
@@ -19,14 +20,14 @@ NUM_EXP="${NUM_EXP:-1}"
 HOLD="${HOLD_AFTER_SUCCESS:-80}"
 MAX_ATTEMPTS="${MAX_DEMO_ATTEMPTS:-60}"
 if [[ "${OAT_USE_UV_RUN:-1}" == "0" ]]; then
-  RUNNER=()
+  RUNNER=(python)
 elif command -v uv >/dev/null 2>&1; then
-  RUNNER=(uv run)
+  RUNNER=(uv run python)
 else
-  RUNNER=()
+  RUNNER=(python)
 fi
 
-mkdir -p "${EVAL_DIR}" "${DEMO_DIR}" "${LOG_DIR}"
+mkdir -p "${DEMO_DIR}" "${LOG_DIR}"
 log="${LOG_DIR}/eval_demo_${TASK}.log"
 
 {
@@ -34,6 +35,7 @@ log="${LOG_DIR}/eval_demo_${TASK}.log"
   echo "ckpt=${CKPT}"
 
   echo "--- quick eval n_test=${N_TEST} ---"
+  rm -rf "${EVAL_DIR}"
   "${RUNNER[@]}" scripts/eval_policy_sim.py \
     --checkpoint "${CKPT}" \
     --output_dir "${EVAL_DIR}" \
@@ -46,7 +48,7 @@ log="${LOG_DIR}/eval_demo_${TASK}.log"
     --use_k_tokens 8
 
   echo "--- success demo (1 clip, hold=${HOLD} steps after success) ---"
-  "${RUNNER[@]}" python scripts/hackathon/rollout_until_success.py \
+  "${RUNNER[@]}" scripts/hackathon/rollout_until_success.py \
     -c "${CKPT}" \
     -o "${DEMO_DIR}" \
     --task "${TASK}" \

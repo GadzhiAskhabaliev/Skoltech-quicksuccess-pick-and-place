@@ -10,6 +10,7 @@ my_datasets/
 *.hdf5
 *.mp4
 *.gif
+!docs/demo/*.gif
 .venv/
 __pycache__/
 *.pyc

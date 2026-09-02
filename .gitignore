@@ -1,0 +1,17 @@
+# Large assets — download from Hugging Face (see README)
+hackathon_assets/
+data/
+output/
+hackathon_output/
+my_models/
+my_datasets/
+*.ckpt
+*.zarr/
+*.hdf5
+*.mp4
+*.gif
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.env

@@ -22,8 +22,9 @@ fi
 NUM_DEMO="${NUM_DEMO:-200}"
 NUM_EPOCHS="${NUM_EPOCHS:-10000}"
 CHECKPOINT_EVERY="${CHECKPOINT_EVERY:-15}"
+# Hackathon POC: no in-train sim — one short eval after fit (eval_and_demo_one.sh)
 ROLLOUT_EVERY="${ROLLOUT_EVERY:-200}"
-ROLLOUT_START="${ROLLOUT_START:-100}"
+ROLLOUT_START="${ROLLOUT_START:-100000}"
 BATCH="${BATCH:-64}"
 
 tok="${STAGE}/tokenizers/${TASK}.ckpt"
@@ -52,7 +53,7 @@ log="${LOG_DIR}/train_${TASK}.log"
     "val_dataloader.batch_size=${BATCH}" \
     "checkpoint.topk.k=1" \
     "logging.mode=disabled" \
-    "task.policy.lazy_eval=false" \
+    "task.policy.lazy_eval=true" \
     "task.policy.env_runner.n_parallel_envs=2" \
     || true
 
